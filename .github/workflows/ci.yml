@@ -1,0 +1,28 @@
+# Keep in sync with `jdk` in gradle/libs.versions.toml
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read JDK version from catalog
+        id: versions
+        run: |
+          JDK=$(grep -E '^jdk\s*=' gradle/libs.versions.toml | head -1 | sed 's/.*=\s*"\([^"]*\)"/\1/')
+          echo "jdk=$JDK" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ steps.versions.outputs.jdk }}
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Compile plugin, library JVM, tests, JVM example
+        run: ./gradlew :kmp-proto-gradle-plugin:build :kmp-proto:jvmTest :examples-jvm:run --stacktrace

@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package demo;
+
+// -----------------------------------------------------------------------------
+// User types
+// -----------------------------------------------------------------------------
+
+message User {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  int32 age = 4;
+  string phone = 5;
+  int64 created_at = 6; // unix seconds
+  int64 updated_at = 7; // unix seconds
+}
+
+message GetUserRequest {
+  string id = 1;
+}
+
+message GetUserByEmailRequest {
+  string email = 1;
+}
+
+message ListUsersRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  string query = 4; // optional name/email search
+}
+
+message ListUsersResponse {
+  repeated User users = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message AddUserRequest {
+  string name = 1;
+  string email = 2;
+  int32 age = 3;
+  string phone = 4;
+}
+
+message UpdateUserRequest {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  int32 age = 4;
+  string phone = 5;
+}
+
+message DeleteUserRequest {
+  string id = 1;
+}
+
+message DeleteUserResponse {
+  bool success = 1;
+  string id = 2;
+}
+
+message GetUserByPhoneRequest {
+  string phone = 1;
+}
+
+// -----------------------------------------------------------------------------
+// User service
+// -----------------------------------------------------------------------------
+
+service UserService {
+  // Create a new user
+  rpc AddUser(AddUserRequest) returns (User);
+
+  // Fetch one user by id
+  rpc GetUser(GetUserRequest) returns (User);
+
+  // Fetch one user by email
+  rpc GetUserByEmail(GetUserByEmailRequest) returns (User);
+
+  // List / search users (paginated)
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+
+  // Update an existing user
+  rpc UpdateUser(UpdateUserRequest) returns (User);
+
+  // Delete a user
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+
+  // Fetch one user by phone
+  rpc GetUserByPhone(GetUserByPhoneRequest) returns (User);
+}

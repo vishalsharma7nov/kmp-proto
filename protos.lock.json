@@ -1,0 +1,33 @@
+{
+  "_readme": "This file tells the library WHERE to load .proto files from when you run: ./gradlew syncProtos. JSON cannot use // comments, so fields starting with _ are documentation only (ignored by the tool).",
+  "_source": "Choose how protos are loaded: \"local\" = folder on disk, \"github\" = clone a git repo, \"buf\" = Buf Schema Registry.",
+  "source": "local",
+  "_path": "Used when source is \"local\". Folder that contains your .proto files (relative to the repo root).",
+  "path": "./vendor/protos",
+  "_repo": "Used when source is \"github\". Full git URL of the proto repository. Set to null when using local.",
+  "repo": null,
+  "_ref": "Used when source is \"github\". Pin a tag or commit (example: \"v1.2.3\"). Do not use a moving branch for releases. Set to null when using local.",
+  "ref": null,
+  "_out": "Optional. Where generated client files are written (relative to the kmp-proto module).",
+  "out": "src/commonMain/kotlin/io/github/vishalsharma7nov/kmpproto/generated",
+  "_examples": {
+    "local": {
+      "source": "local",
+      "path": "./vendor/protos",
+      "repo": null,
+      "ref": null
+    },
+    "github": {
+      "source": "github",
+      "path": null,
+      "repo": "https://github.com/you/your-protos.git",
+      "ref": "v1.2.3"
+    },
+    "buf": {
+      "source": "buf",
+      "module": "buf.build/acme/petapis",
+      "ref": "1.0.0",
+      "out": "src/commonMain/kotlin/io/github/vishalsharma7nov/kmpproto/generated"
+    }
+  }
+}

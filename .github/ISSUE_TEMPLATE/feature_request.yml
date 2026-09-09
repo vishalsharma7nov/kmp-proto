@@ -1,0 +1,30 @@
+name: Feature request
+description: Propose a new capability or improvement
+title: "[feat]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What problem are you trying to solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How should it work from an API / UX perspective?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: checkboxes
+    id: breaking
+    attributes:
+      label: Compatibility
+      options:
+        - label: This may require a breaking (SemVer major / pre-1.0 minor) change
+        - label: I am willing to help implement this

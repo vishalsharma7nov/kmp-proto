@@ -1,0 +1,43 @@
+name: Sync protos
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+    inputs:
+      proto_repo:
+        description: "Upstream proto git URL (optional override)"
+        required: false
+      proto_ref:
+        description: "Pinned ref (optional override)"
+        required: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read JDK version from catalog
+        id: versions
+        run: |
+          JDK=$(grep -E '^jdk\s*=' gradle/libs.versions.toml | head -1 | sed 's/.*=\s*"\([^"]*\)"/\1/')
+          echo "jdk=$JDK" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ steps.versions.outputs.jdk }}
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Sync and generate
+        run: ./gradlew :kmp-proto:syncProtos
+      - name: Create PR if changed
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore: sync upstream protos"
+          title: "chore: sync upstream protos"
+          body: |
+            Auto-generated after upstream proto changes.
+            Review the regenerated method map and codecs before merge.
+          branch: chore/sync-protos

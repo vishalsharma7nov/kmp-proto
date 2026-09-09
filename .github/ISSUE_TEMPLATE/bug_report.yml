@@ -1,0 +1,71 @@
+name: Bug report
+description: Report incorrect behavior in kmp-proto or the Gradle plugin
+title: "[bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Please search existing issues first.
+        For security vulnerabilities, use [SECURITY.md](https://github.com/vishalsharma7nov/kmp-proto/blob/master/SECURITY.md) — do not file a public bug.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What went wrong in one or two sentences?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Library / plugin version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      multiple: true
+      options:
+        - Android
+        - iOS
+        - JVM
+        - Gradle plugin
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Minimal steps or a small code snippet.
+      render: markdown
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include stack traces or ProtoClientError codes when possible.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: JDK, Kotlin, AGP, OS (see docs/SUPPORT_MATRIX.md).
+      value: |
+        - JDK:
+        - Kotlin:
+        - AGP / Android minSdk:
+        - OS:
+    validations:
+      required: true
