@@ -11,6 +11,7 @@ dependencies {
     implementation(kotlin("stdlib"))
     compileOnly(gradleApi())
     compileOnly(localGroovy())
+    testImplementation(kotlin("test"))
 }
 
 gradlePlugin {
@@ -26,4 +27,8 @@ gradlePlugin {
 
 kotlin {
     jvmToolchain(libs.versions.jdk.get().toInt())
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

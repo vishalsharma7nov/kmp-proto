@@ -72,9 +72,11 @@ implementation("io.github.vishalsharma7nov:kmp-proto:0.1.0")
 
 ```kotlin
 import io.github.vishalsharma7nov.kmpproto.ProtoClientConfig
+import io.github.vishalsharma7nov.kmpproto.ProtoSource
 
 val config = ProtoClientConfig(
     baseUrl = "https://api.example.com",
+    protoSource = ProtoSource.local("protos"),
     getHeaders = { mapOf("Authorization" to "Bearer ${getToken()}") },
 )
 ```
@@ -110,6 +112,7 @@ plugins {
 ```
 
 ```bash
+./gradlew kmpProtoGenerate -PkmpProto.out=./src/commonMain/kotlin/generated
 ./gradlew kmpProtoGenerate -PkmpProto.from=local -PkmpProto.protoPath=./protos -PkmpProto.out=./src/commonMain/kotlin/generated
 ./gradlew kmpProtoWatch
 ./gradlew kmpProtoGenerate -PkmpProto.from=github -PkmpProto.repo=https://github.com/you/protos.git -PkmpProto.ref=v1.0.0

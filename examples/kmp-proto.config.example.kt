@@ -4,6 +4,7 @@
 package com.example.app
 
 import io.github.vishalsharma7nov.kmpproto.ProtoClientConfig
+import io.github.vishalsharma7nov.kmpproto.ProtoSource
 import io.github.vishalsharma7nov.kmpproto.TransportKind
 import io.github.vishalsharma7nov.kmpproto.auth.createAuthInterceptor
 import io.github.vishalsharma7nov.kmpproto.auth.AuthInterceptorOptions
@@ -12,6 +13,16 @@ import io.github.vishalsharma7nov.kmpproto.path.PathTemplatePreset
 
 val kmpProtoConfig = ProtoClientConfig(
     baseUrl = "https://api.example.com",
+    protoSource = ProtoSource.local("protos"),
+    // protoSource = ProtoSource.github(
+    //     repo = "https://github.com/you/your-protos.git",
+    //     ref = "v1.2.3",
+    //     path = "protos",
+    // ),
+    // protoSource = ProtoSource.buf(
+    //     module = "buf.build/acme/petapis",
+    //     ref = "1.0.0",
+    // ),
     getHeaders = {
         mapOf("Authorization" to "Bearer YOUR_TOKEN")
     },

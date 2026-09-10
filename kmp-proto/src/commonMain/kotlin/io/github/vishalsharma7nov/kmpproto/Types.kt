@@ -22,6 +22,14 @@ public typealias HeaderMap = Map<String, String>
 public data class ProtoClientConfig(
     /** API origin, for example https://api.example.com */
     val baseUrl: String,
+    /**
+     * Where to load `.proto` files for generate/sync.
+     *
+     * Use [ProtoSource.local], [ProtoSource.github], or [ProtoSource.buf].
+     * When null, generate fetches `.proto` files from the project directory
+     * (`protos/`, `vendor/protos/`, or the current directory).
+     */
+    val protoSource: ProtoSource? = null,
     /** Optional per-request headers (auth tokens, app version, etc.) */
     val getHeaders: (suspend () -> HeaderMap)? = null,
     /** Request timeout in milliseconds (default 30000) */

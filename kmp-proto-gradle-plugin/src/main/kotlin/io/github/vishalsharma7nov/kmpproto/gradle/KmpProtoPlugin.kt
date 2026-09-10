@@ -10,6 +10,7 @@ import java.io.File
 
 open class KmpProtoExtension {
     var from: String = "local"
+    /** Local proto folder, or a subdirectory inside a GitHub clone. Null = discover in the project. */
     var protoPath: String? = null
     var repo: String? = null
     var ref: String? = null
@@ -56,7 +57,7 @@ abstract class KmpProtoGenerateTask : DefaultTask() {
         if (files.isEmpty()) {
             throw IllegalStateException(
                 "No .proto files found under ${protoDir.absolutePath}. " +
-                    "Check --from/--path or protos.lock.json",
+                    "Set ProtoClientConfig.protoSource or pass -PkmpProto.protoPath.",
             )
         }
         val parsed = files.map { ProtoParser.parse(it.readText(), it.name) }
@@ -78,15 +79,7 @@ abstract class KmpProtoGenerateTask : DefaultTask() {
 
     private fun resolveProtoDir(rootDir: File, projectDir: File): File {
         return when (from.lowercase()) {
-            "local" -> {
-                val p = protoPath ?: throw IllegalStateException("local source requires path")
-                val candidate = File(p)
-                when {
-                    candidate.isAbsolute -> candidate
-                    File(projectDir, p).exists() -> File(projectDir, p)
-                    else -> File(rootDir, p)
-                }
-            }
+            "local" -> LocalProtoDiscovery.discover(projectDir, rootDir, protoPath)
             "github" -> {
                 val repository = repo ?: throw IllegalStateException("github source requires repo")
                 val reference = ref ?: throw IllegalStateException("github source requires ref (tag or commit)")
@@ -109,7 +102,16 @@ abstract class KmpProtoGenerateTask : DefaultTask() {
                         throw IllegalStateException("Failed to checkout $reference")
                     }
                 }
-                staging
+                val sub = protoPath
+                if (sub.isNullOrBlank()) {
+                    staging
+                } else {
+                    val nested = File(staging, sub)
+                    if (!nested.exists()) {
+                        throw IllegalStateException("Proto path does not exist in repo: ${nested.absolutePath}")
+                    }
+                    nested
+                }
             }
             "buf" -> {
                 val mod = module ?: throw IllegalStateException("buf source requires module")
@@ -156,12 +158,14 @@ abstract class KmpProtoWatchTask : DefaultTask() {
         generate.out = out
         generate.packageName = packageName
         generate.generate()
-        val watchPath = protoPath ?: return
-        logger.lifecycle("kmp-proto: watching $watchPath (polling every 2s). Ctrl+C to stop.")
+        val dir = LocalProtoDiscovery.discover(
+            projectDir = project.projectDir,
+            rootDir = project.rootProject.projectDir,
+            path = protoPath,
+        )
+        logger.lifecycle("kmp-proto: watching ${dir.absolutePath} (polling every 2s). Ctrl+C to stop.")
         var last = 0L
         while (!Thread.currentThread().isInterrupted) {
-            val dir = File(project.projectDir, watchPath).takeIf { it.exists() }
-                ?: File(project.rootProject.projectDir, watchPath)
             val newest = dir.walkTopDown().filter { it.extension == "proto" }
                 .maxOfOrNull { it.lastModified() } ?: 0L
             if (newest > last) {

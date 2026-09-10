@@ -54,9 +54,11 @@ Create `kmp-proto.config.kt` **in your app**:
 
 ```kotlin
 import io.github.vishalsharma7nov.kmpproto.ProtoClientConfig
+import io.github.vishalsharma7nov.kmpproto.ProtoSource
 
 val config = ProtoClientConfig(
     baseUrl = "https://api.example.com",
+    protoSource = ProtoSource.local("protos"),
     getHeaders = { mapOf("Authorization" to "Bearer $token") },
 )
 ```
@@ -98,10 +100,10 @@ plugins {
 
 ```bash
 ./gradlew kmpProtoGenerate \
-  -PkmpProto.from=local \
-  -PkmpProto.protoPath=./protos \
   -PkmpProto.out=./src/commonMain/kotlin/generated
 ```
+
+Pass `-PkmpProto.protoPath=./protos` (or `ProtoSource.local("protos")` on config) to pin a folder. Omit both to fetch `.proto` files from the project directory. GitHub/Buf: `ProtoSource.github` / `ProtoSource.buf`, or `-PkmpProto.from=github` / `-PkmpProto.from=buf`.
 
 Your protos must declare `service` / `rpc` blocks. Details: [GENERATE.md](./GENERATE.md).
 

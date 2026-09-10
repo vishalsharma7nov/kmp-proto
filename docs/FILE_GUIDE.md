@@ -14,6 +14,7 @@
 |------|---------|
 | `kmp-proto/src/commonMain/.../KmpProto.kt` | Public `createClient` entry |
 | `kmp-proto/src/commonMain/.../Types.kt` | Config, method map, codec types |
+| `kmp-proto/src/commonMain/.../ProtoSource.kt` | `ProtoSource` — local / GitHub / Buf proto location |
 | `kmp-proto/src/commonMain/.../transport/` | Sends/receives data (Ktor) |
 | `kmp-proto/src/commonMain/.../errors/` | `ProtoClientError` and helpers |
 | `kmp-proto/src/commonMain/.../client/` | Builds `api.service.method` from the method map |

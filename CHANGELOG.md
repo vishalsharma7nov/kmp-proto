@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `ProtoClientConfig.protoSource` — local path, GitHub repo, or Buf module. When omitted, `kmpProtoGenerate` fetches `.proto` files from the project directory.
 - Industrial documentation pack: contributing, security, code of conduct, support matrix, versioning, Dokka API guide, GitHub issue/PR templates
 - Compose example mock mode uses generated protobuf codecs (`GetUserRequest` / `User`) via Ktor `MockEngine`
 

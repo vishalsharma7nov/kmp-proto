@@ -59,6 +59,31 @@ class ConfigValidationTest {
         assertEquals("https://api.example.com", resolved.baseUrl)
         resolved.httpClient.close()
     }
+
+    @Test
+    fun protoSourceDefaultsToNull() {
+        val config = ProtoClientConfig(baseUrl = "https://api.example.com")
+        assertEquals(null, config.protoSource)
+    }
+
+    @Test
+    fun protoSourceLocalGithubAndBuf() {
+        val local = ProtoSource.local("protos")
+        val github = ProtoSource.github("https://github.com/you/protos.git", "v1.2.3", "protos")
+        val buf = ProtoSource.buf("buf.build/acme/petapis", "1.0.0")
+        assertEquals(ProtoSource.Local("protos"), local)
+        assertEquals(
+            ProtoSource.Github("https://github.com/you/protos.git", "v1.2.3", "protos"),
+            github,
+        )
+        assertEquals(ProtoSource.Buf("buf.build/acme/petapis", "1.0.0"), buf)
+        val config = ProtoClientConfig(
+            baseUrl = "https://api.example.com",
+            protoSource = local,
+        )
+        assertEquals(local, config.protoSource)
+        assertEquals(github, config.copy(protoSource = github).protoSource)
+    }
 }
 
 class CodecRoundTripTest {

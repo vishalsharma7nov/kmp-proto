@@ -5,6 +5,7 @@
 | Field | Type | Default | Purpose |
 |-------|------|---------|---------|
 | `baseUrl` | `String` | required | API origin (`https://api.example.com`) |
+| `protoSource` | `ProtoSource?` | null | Where generate loads `.proto` files (local path, GitHub, or Buf). When omitted, generate fetches them from the project directory. Not used by `createApi` at request time. |
 | `getHeaders` | `suspend () -> Map` | null | Auth and other headers |
 | `timeoutMs` | `Long` | 30000 | Request timeout |
 | `maxResponseBytes` | `Int` | 2 MiB | Reject oversized responses |
